@@ -85,6 +85,7 @@ class InlineText extends Field
 
         $this->withMeta([
             'inlineOnIndex' => $this->inlineOnIndex,
+            'editableField' => false,
             'refreshOnSaving' => $this->refreshOnSaving,
             'event' => $this->event,
         ]);
