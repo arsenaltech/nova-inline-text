@@ -1,5 +1,5 @@
 <template>
-    <default-field :field="field" :errors="errors">
+    <DefaultField :field="field" :errors="errors">
         <template #field>
             <input
                 :id="field.name"
@@ -10,7 +10,7 @@
                 v-model="value"
             />
         </template>
-    </default-field>
+    </DefaultField>
 </template>
 
 <script>
