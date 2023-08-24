@@ -54,19 +54,19 @@ export default {
           )
           .then(
               (response) => {
-                this.$toasted.show(`${this.field.name} updated`, {
-                  type: 'success',
-                });
+                Nova.success(this.__(`${this.field.name} updated`), { type: 'success' });
                 if(response.data != undefined){
                   this.refreshTable(response.data);
                 }else{
-                  this.$toasted.show(`Please refresh the page`, {
-                    type: 'success',
-                  });
+                  Nova.success(this.__('Please refresh the page'), { type: 'success' });
                 }
                 this.field.editableField = false;
               },
-              (response) => this.$toasted.show(response, { type: 'error' })
+              (response) => {
+                Nova.error(this.__(response), {
+                  type: 'error',
+                });
+              }
           );
     },
 
