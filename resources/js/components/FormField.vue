@@ -1,6 +1,6 @@
 <template>
     <default-field :field="field" :errors="errors">
-        <template slot="field">
+        <template #field>
             <input
                 :id="field.name"
                 type="text"
