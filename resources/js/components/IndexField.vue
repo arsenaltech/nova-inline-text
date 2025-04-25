@@ -11,7 +11,7 @@
           v-on="listener"
           :disabled="field.readonly"
       />
-      <span @click="field.editableField = false"
+      <span @click="value = defaultValue; field.editableField = false"
             class="inline-flex cursor-pointer text-danger has-tooltip">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                    class="h-6 w-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -34,6 +34,27 @@ export default {
   mixins: [FormField, HandlesValidationErrors],
 
   props: ['resourceName', 'field'],
+
+  data() {
+    return {
+      defaultValue: null, 
+    };
+  },
+
+  mounted() {
+    this.defaultValue = this.value;
+  },
+
+  watch: {
+    'field.editableField'(newVal) {
+      if (newVal) {
+        this.value = this.field.value;
+        this.defaultValue = this.field.value;
+      }
+    },
+  },
+
+
   methods: {
     submit() {
       if (this.valueWasNotChanged){
@@ -55,6 +76,8 @@ export default {
           .then(
               (response) => {
                 Nova.success(this.__(`${this.field.name} updated`), { type: 'success' });
+                this.field.value = this.value;
+                this.defaultValue = this.value;
                 if(response.data != undefined){
                   this.refreshTable(response.data);
                 }else{
@@ -62,10 +85,17 @@ export default {
                 }
                 this.field.editableField = false;
               },
-              (response) => {
-                Nova.error(this.__(response), {
-                  type: 'error',
-                });
+              (error) => {
+                if (error.response && error.response.status === 422) {
+                  const errors = error.response.data.errors;
+                  const fieldName = this.field.attribute;
+
+                  if (errors[fieldName]) {
+                    Nova.error(this.__(errors[fieldName][0]), { type: 'error' });
+                  }
+                } else {
+                  Nova.error(this.__('Something went wrong'), { type: 'error' });
+                }
               }
           );
     },
