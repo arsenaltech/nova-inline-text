@@ -80,6 +80,11 @@ export default {
                 this.defaultValue = this.value;
                 if(response.data != undefined){
                   this.refreshTable(response.data);
+                  this.$inertia.visit(`/resources/${this.resourceName}`, {
+                    only: ['resources'],
+                    preserveScroll: true,
+                    replace: true,
+                  });
                 }else{
                   Nova.success(this.__('Please refresh the page'), { type: 'success' });
                 }
